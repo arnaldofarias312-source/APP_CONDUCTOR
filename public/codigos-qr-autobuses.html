@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Códigos QR de Autobuses — SICVITT</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      margin: 0;
+      padding: 30px 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0 0 8px;
+      color: #0b3d91;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      text-align: center;
+      border: 2px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .bus-id {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0 0 16px;
+      color: #1e293b;
+    }
+    .qr-frame {
+      background: white;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+    .qr-img {
+      width: 200px;
+      height: 200px;
+      display: block;
+    }
+    .uuid-label {
+      font-size: 11px;
+      color: #64748b;
+      font-family: monospace;
+      word-break: break-all;
+      background: #f1f5f9;
+      padding: 6px 10px;
+      border-radius: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+      .card { break-inside: avoid; border: 1px solid #000; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🚌 Códigos QR de Autobuses — SICVITT</h1>
+    <p>Escanea estos códigos con la cámara de la app de conductores o imprímelos para pegarlos en los tableros.</p>
+  </div>
+
+  <div class="grid">
+    <!-- CANCH-01 -->
+    <div class="card" style="border-top: 6px solid #38BDF8;">
+      <span class="badge" style="background: #38BDF8;">NUESTRA SRA DEL CARMEN CANCHUNCHU</span>
+      <div class="bus-id">CANCH-01</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=1b2a9f9f-eedd-4d57-995b-be154926c035" alt="QR CANCH-01">
+      </div>
+      <div class="uuid-label">ID: 1b2a9f9f-eedd-4d57-995b-be154926c035</div>
+    </div>
+
+    <!-- LIR-01 -->
+    <div class="card" style="border-top: 6px solid #EAB308;">
+      <span class="badge" style="background: #EAB308; color: #1e293b;">GUAYA-LIRIO</span>
+      <div class="bus-id">LIR-01</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=8a329b7d-73ce-4f61-853c-c44af3774dde" alt="QR LIR-01">
+      </div>
+      <div class="uuid-label">ID: 8a329b7d-73ce-4f61-853c-c44af3774dde</div>
+    </div>
+
+    <!-- MC-01 -->
+    <div class="card" style="border-top: 6px solid #FF66CC;">
+      <span class="badge" style="background: #FF66CC; color: #333;">GUAYA-MUCO</span>
+      <div class="bus-id">MC-01</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=26d51a07-7eaa-47e5-95ae-10dbd2ef783f" alt="QR MC-01">
+      </div>
+      <div class="uuid-label">ID: 26d51a07-7eaa-47e5-95ae-10dbd2ef783f</div>
+    </div>
+
+    <!-- MC-02 -->
+    <div class="card" style="border-top: 6px solid #FF66CC;">
+      <span class="badge" style="background: #FF66CC; color: #333;">GUAYA-MUCO</span>
+      <div class="bus-id">MC-02</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=9e7a492c-606d-47c2-ac2a-ec47e8c83cce" alt="QR MC-02">
+      </div>
+      <div class="uuid-label">ID: 9e7a492c-606d-47c2-ac2a-ec47e8c83cce</div>
+    </div>
+
+    <!-- CBA-01 -->
+    <div class="card" style="border-top: 6px solid #7C3AED;">
+      <span class="badge" style="background: #7C3AED;">LA CEIBA DE CANCHUNCHU</span>
+      <div class="bus-id">CBA-01</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=278edc27-abc4-419a-aabb-a135de686c39" alt="QR CBA-01">
+      </div>
+      <div class="uuid-label">ID: 278edc27-abc4-419a-aabb-a135de686c39</div>
+    </div>
+
+    <!-- 22AG-01 -->
+    <div class="card" style="border-top: 6px solid #EF4444;">
+      <span class="badge" style="background: #EF4444;">22 DE AGOSTO</span>
+      <div class="bus-id">22AG-01</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=3a3aae9b-aa3b-4be0-89c2-cbabb17b9a61" alt="QR 22AG-01">
+      </div>
+      <div class="uuid-label">ID: 3a3aae9b-aa3b-4be0-89c2-cbabb17b9a61</div>
+    </div>
+
+    <!-- SN-01 -->
+    <div class="card" style="border-top: 6px solid #8B1A1A;">
+      <span class="badge" style="background: #8B1A1A;">SAN MARTÍN</span>
+      <div class="bus-id">SN-01</div>
+      <div class="qr-frame">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=d35c0d6e-c9e6-4dbf-a732-40b2c066845a" alt="QR SN-01">
+      </div>
+      <div class="uuid-label">ID: d35c0d6e-c9e6-4dbf-a732-40b2c066845a</div>
+    </div>
+  </div>
+</body>
+</html>
