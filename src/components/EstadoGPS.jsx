@@ -9,9 +9,10 @@
  */
 export default function EstadoGPS({ posicion, error, ultimaActualizacion, puntosEnviados }) {
   if (error) {
+    const textoError = typeof error === 'string' ? error : (error.mensaje || error.message || 'Error en GPS');
     return (
       <div className="estado estado--error">
-        <strong>⚠ {error.mensaje}</strong>
+        <strong>⚠ {textoError}</strong>
       </div>
     )
   }

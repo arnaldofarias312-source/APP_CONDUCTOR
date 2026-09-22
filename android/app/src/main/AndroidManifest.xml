@@ -43,13 +43,6 @@
 
         </activity>
 
-        <!-- SERVICIO EN PRIMER PLANO PARA RASTREO GPS EN SEGUNDO PLANO -->
-        <service
-            android:name="com.elnebulosa.backgroundgeolocation.BackgroundGeolocationService"
-            android:foregroundServiceType="location"
-            android:enabled="true"
-            android:exported="false" />
-
     </application>
 
 </manifest>

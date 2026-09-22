@@ -5,9 +5,10 @@ import { supabase } from '../lib/supabaseClient';
 const BackgroundGeolocation = registerPlugin('BackgroundGeolocation');
 
 // ===== Filtros anti-jitter GPS =====
-const PRECISION_MAX_METROS = 35;
+const PRECISION_MAX_METROS = 65;
 const DISTANCIA_MINIMA_METROS = 5;
 const SALTO_IMPOSIBLE_METROS = 300;
+const TIEMPO_MAX_SIN_EMITIR_MS = 20000; // 20s de latido si el bus está detenido
 
 class KalmanFilter {
   constructor() {
@@ -45,6 +46,7 @@ export function useBackgroundGeolocation(jornadaActiva, jornadaId, intervaloMs =
   const kalmanLngRef = useRef(new KalmanFilter());
   const ultimaPosEmitidaRef = useRef(null);
   const ultimaEmisionRef = useRef(0);
+  const lecturasDegradadasRef = useRef(0);
 
   function distanciaMetros(lat1, lng1, lat2, lng2) {
     const R = 6371000;
@@ -59,8 +61,23 @@ export function useBackgroundGeolocation(jornadaActiva, jornadaId, intervaloMs =
 
   const procesarYEnviarUbicacion = useCallback(
     async (latCruda, lngCruda, velocidad, precision) => {
-      // 1. Filtro de Precisión
-      if (precision != null && precision > PRECISION_MAX_METROS) return;
+      const ahora = Date.now();
+
+      // 1. Filtro de Precisión con fallback
+      if (precision != null && precision > PRECISION_MAX_METROS) {
+        lecturasDegradadasRef.current += 1;
+        if (lecturasDegradadasRef.current < 3) {
+          console.warn(
+            `[GPS Descarte] Precisión insuficiente (${precision.toFixed(1)}m > ${PRECISION_MAX_METROS}m). Intento ${lecturasDegradadasRef.current}/3`
+          );
+          return;
+        }
+        console.warn(
+          `[GPS Fallback] 3 lecturas seguidas con precisión baja (${precision.toFixed(1)}m). Transmitiendo para no perder señal.`
+        );
+      } else {
+        lecturasDegradadasRef.current = 0;
+      }
 
       // 2. Filtro de Kalman
       const latFiltrada = kalmanLatRef.current.filter(latCruda);
@@ -73,15 +90,30 @@ export function useBackgroundGeolocation(jornadaActiva, jornadaId, intervaloMs =
         precision_metros: precision ?? 0,
       };
 
-      // 3. Filtros de Distancia
+      // 3. Filtros de Distancia y Heartbeat
       const ultima = ultimaPosEmitidaRef.current;
       if (ultima) {
         const dist = distanciaMetros(ultima.lat, ultima.lng, nuevaPos.lat, nuevaPos.lng);
-        if (dist > SALTO_IMPOSIBLE_METROS || dist < DISTANCIA_MINIMA_METROS) return;
+
+        if (dist > SALTO_IMPOSIBLE_METROS) {
+          console.warn(`[GPS Descarte] Salto imposible (${dist.toFixed(0)}m > ${SALTO_IMPOSIBLE_METROS}m).`);
+          return;
+        }
+
+        const tiempoDesdeUltimoPunto = ahora - ultimaEmisionRef.current;
+        const esLatido = tiempoDesdeUltimoPunto >= TIEMPO_MAX_SIN_EMITIR_MS;
+
+        if (dist < DISTANCIA_MINIMA_METROS && !esLatido) {
+          // Bus detenido y aún no vence el tiempo de latido
+          return;
+        }
+
+        if (esLatido && dist < DISTANCIA_MINIMA_METROS) {
+          console.log(`[GPS Heartbeat] Bus detenido hace ${(tiempoDesdeUltimoPunto / 1000).toFixed(0)}s. Enviando latido.`);
+        }
       }
 
       // 4. Throttle de tiempo
-      const ahora = Date.now();
       if (ahora - ultimaEmisionRef.current < intervaloMs) return;
 
       ultimaEmisionRef.current = ahora;
@@ -103,6 +135,7 @@ export function useBackgroundGeolocation(jornadaActiva, jornadaId, intervaloMs =
         setError(null);
         setPuntosEnviados((prev) => prev + 1);
       } else {
+        console.error('[GPS Error Supabase]', errSupabase);
         setError(`Error al guardar en Supabase: ${errSupabase.message}`);
       }
     },
@@ -115,6 +148,7 @@ export function useBackgroundGeolocation(jornadaActiva, jornadaId, intervaloMs =
       kalmanLngRef.current.reset();
       ultimaPosEmitidaRef.current = null;
       ultimaEmisionRef.current = 0;
+      lecturasDegradadasRef.current = 0;
       return;
     }
 
