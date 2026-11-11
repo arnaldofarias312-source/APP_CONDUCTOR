@@ -2,7 +2,7 @@
  * Muestra el módulo con los datos detallados del conductor.
  *
  * Props:
- *  - conductorInfo: { id, nombre, apellido, cedula, linea_nombre, linea_color }
+ *  - conductorInfo: { id, nombre, apellido, cedula, linea_nombre, linea_color, lineas_autorizadas }
  *  - autobusSeleccionado: { id, identificador, lineas } | null
  */
 export default function PerfilConductor({ conductorInfo, autobusSeleccionado }) {
@@ -39,9 +39,21 @@ export default function PerfilConductor({ conductorInfo, autobusSeleccionado }) 
         </div>
 
         <div className="perfil-item">
-          <small>Línea / Ruta Asignada</small>
+          <small>{conductorInfo.lineas_autorizadas?.length > 1 ? 'Líneas Asignadas' : 'Línea / Ruta Asignada'}</small>
           <strong>
-            {conductorInfo.linea_nombre ? (
+            {conductorInfo.lineas_autorizadas && conductorInfo.lineas_autorizadas.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%', marginTop: '2px' }}>
+                {conductorInfo.lineas_autorizadas.map((l) => (
+                  <div key={l.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span
+                      className="bienvenida-punto"
+                      style={{ backgroundColor: l.color_hex || '#0b3d91' }}
+                    />
+                    <span>{l.nombre}</span>
+                  </div>
+                ))}
+              </div>
+            ) : conductorInfo.linea_nombre ? (
               <>
                 <span
                   className="bienvenida-punto"
@@ -75,4 +87,4 @@ export default function PerfilConductor({ conductorInfo, autobusSeleccionado }) 
       </div>
     </div>
   )
-}
+}

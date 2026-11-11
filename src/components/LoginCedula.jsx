@@ -51,18 +51,17 @@ export default function LoginCedula({ onLogin, deshabilitado, conductorInfo }) {
       }
 
       // Llamar al callback con los datos del conductor
-// Llamar al callback con los datos del conductor
-onLogin({
-  id: conductor.id,
-  // Si la RPC no devuelve conductor.cedula, toma lo que el usuario escribió en el input:
-  cedula: conductor.cedula || cedulaLimpia, 
-  nombre: conductor.nombre,
-  apellido: conductor.apellido || '',
-  linea_id: conductor.linea_id,
-  linea_nombre: conductor.linea_nombre,
-  linea_color: conductor.linea_color || '#94a3b8',
-  autobus_identificador: conductor.autobus_identificador,
-})
+      onLogin({
+        id: conductor.id,
+        cedula: conductor.cedula || cedulaLimpia,
+        nombre: conductor.nombre,
+        apellido: conductor.apellido || '',
+        linea_id: conductor.linea_id,
+        linea_nombre: conductor.linea_nombre,
+        linea_color: conductor.linea_color || '#94a3b8',
+        lineas_autorizadas: conductor.lineas_autorizadas || [],
+        autobus_identificador: conductor.autobus_identificador,
+      })
     } catch (err) {
       console.error('Error inesperado:', err)
       setError('Ocurrió un error inesperado. Intenta de nuevo.')

@@ -114,16 +114,23 @@ export default function EscanerQR({
         return
       }
 
-      // Validación estricta: La línea del autobús debe ser la misma línea del conductor
-      const lineaConductorId = conductorInfo?.linea_id
+      // Validación estricta: La línea del autobús debe estar autorizada para el conductor (soporta 1 o varias)
       const lineaAutobusId = data?.lineas_id
+      const lineasAutorizadas = conductorInfo?.lineas_autorizadas || []
 
-      if (lineaConductorId && lineaAutobusId && lineaConductorId !== lineaAutobusId) {
+      // Obtenemos los IDs permitidos (del arreglo multilinea o del campo individual)
+      const idsPermitidos = lineasAutorizadas.length > 0
+        ? lineasAutorizadas.map((l) => l.id)
+        : (conductorInfo?.linea_id ? [conductorInfo.linea_id] : [])
+
+      if (idsPermitidos.length > 0 && lineaAutobusId && !idsPermitidos.includes(lineaAutobusId)) {
         const nombreLineaBus = data.lineas?.nombre || 'otra línea'
-        const nombreLineaConductor = conductorInfo?.linea_nombre || 'tu línea asignada'
+        const nombresAutorizadas = lineasAutorizadas.length > 0
+          ? lineasAutorizadas.map((l) => `"${l.nombre}"`).join(' o ')
+          : `"${conductorInfo?.linea_nombre || 'tu línea asignada'}"`
 
         setError(
-          `⛔ Autobús no autorizado: La unidad "${data.identificador}" pertenece a "${nombreLineaBus}". Tu línea asignada es "${nombreLineaConductor}". Solo puedes iniciar jornada con autobuses de tu propia línea.`
+          `⛔ Autobús no autorizado: La unidad "${data.identificador}" pertenece a "${nombreLineaBus}". Solo puedes iniciar jornada con autobuses de tu(s) línea(s) autorizada(s): ${nombresAutorizadas}.`
         )
         setCargando(false)
         return
